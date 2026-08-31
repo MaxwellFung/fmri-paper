@@ -9,7 +9,14 @@ SERVICE_NAME="${SERVICE_NAME:-jupyter-fmri.service}"
 PROJECT_DIR="${PROJECT_DIR:-/home/${JUPYTER_USER}/fmri-paper}"
 TOKEN_FILE="/home/${JUPYTER_USER}/.jupyter_fmri_token"
 
-if ! systemctl list-unit-files "${SERVICE_NAME}" >/dev/null 2>&1 && [ -x "${PROJECT_DIR}/scripts/gcp_jupyter_startup.sh" ]; then
+SERVICE_NEEDS_INSTALL=0
+if ! systemctl list-unit-files "${SERVICE_NAME}" >/dev/null 2>&1; then
+  SERVICE_NEEDS_INSTALL=1
+elif ! systemctl cat "${SERVICE_NAME}" 2>/dev/null | grep -Fq "WorkingDirectory=${PROJECT_DIR}"; then
+  SERVICE_NEEDS_INSTALL=1
+fi
+
+if [ "${SERVICE_NEEDS_INSTALL}" = "1" ] && [ -x "${PROJECT_DIR}/scripts/gcp_jupyter_startup.sh" ]; then
   PROJECT_DIR="${PROJECT_DIR}" "${PROJECT_DIR}/scripts/gcp_jupyter_startup.sh"
 fi
 

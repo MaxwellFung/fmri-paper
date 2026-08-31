@@ -6,7 +6,12 @@ set -euo pipefail
 JUPYTER_USER="${JUPYTER_USER:-maxwellfung}"
 JUPYTER_PORT="${JUPYTER_PORT:-8888}"
 SERVICE_NAME="${SERVICE_NAME:-jupyter-fmri.service}"
+PROJECT_DIR="${PROJECT_DIR:-/home/${JUPYTER_USER}/fmri-paper}"
 TOKEN_FILE="/home/${JUPYTER_USER}/.jupyter_fmri_token"
+
+if ! systemctl list-unit-files "${SERVICE_NAME}" >/dev/null 2>&1 && [ -x "${PROJECT_DIR}/scripts/gcp_jupyter_startup.sh" ]; then
+  PROJECT_DIR="${PROJECT_DIR}" "${PROJECT_DIR}/scripts/gcp_jupyter_startup.sh"
+fi
 
 systemctl daemon-reload
 systemctl enable "${SERVICE_NAME}"

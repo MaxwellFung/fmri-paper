@@ -4,7 +4,7 @@ set -euo pipefail
 # GCP startup script for the fMRI notebook VM.
 # Edit these three values if your VM username or paths differ.
 JUPYTER_USER="${JUPYTER_USER:-maxwellfung}"
-PROJECT_DIR="${PROJECT_DIR:-/home/${JUPYTER_USER}/brain-project}"
+PROJECT_DIR="${PROJECT_DIR:-/home/${JUPYTER_USER}/fmri-paper}"
 REPO_URL="${REPO_URL:-https://github.com/MaxwellFung/fmri-paper.git}"
 JUPYTER_PORT="${JUPYTER_PORT:-8888}"
 
